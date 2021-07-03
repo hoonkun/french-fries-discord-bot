@@ -1,0 +1,8 @@
+configurations.json
+
+publish
+node_modules
+resources
+libs
+
+.idea
