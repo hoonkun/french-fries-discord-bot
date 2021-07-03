@@ -115,7 +115,7 @@ class Main extends Executor {
                     target.push("이 디코봇은 typescript 라는 언어를 사용했고, nodejs 라는 서버 구축 플랫폼과 Discord.js 라는 라이브러리를 사용해 만들어졌어.");
                     target.push("총 개발 기간은 3일 정도였고, javascript로 작성했던걸 typescript로 바꾸는 과정에 1일이 추가로 쓰였어.");
                     target.push("이것 저것 요소를 추가하다보니 좀 더럽고 어렵게 짜였는데, 훨씬 간단하게도 짤 수 있어.");
-                    target.push("소스코드를 보고싶으면 이쪽으로 가봐: ");
+                    target.push("소스코드를 보고싶으면 이쪽으로 가봐:\n> https://github.com/gohoon-k/french-fries-discord-bot");
                     target.push("말했듯 별로 재미난 건 없지만 추가되었으면 하는게 있다면 말해주면 추가해볼게!!");
                 }
 
