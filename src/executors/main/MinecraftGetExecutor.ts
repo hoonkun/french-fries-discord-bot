@@ -58,8 +58,6 @@ class MinecraftGetExecutor extends Executor {
             case this.Args.DEATH_MESSAGE: spawnArgs = "died"; break;
         }
 
-        console.log(arg);
-
         const process = spawnSync(
             "java", ["-jar", "-Dfile.encoding=UTF-8", `${__dirname}/../../../libs/fries-mc-module.jar`, spawnArgs],
             {encoding: "utf8"}
