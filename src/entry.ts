@@ -48,6 +48,6 @@ client.on("message", (message) => {
     }
 });
 
-client.login(configurations.TEST_TOKEN).then((resultMessage) => {
-    console.log(`Login: ${resultMessage}`);
+client.login(configurations.PUBLISH_TOKEN).then(() => {
+    console.log(`Login!!`);
 });
