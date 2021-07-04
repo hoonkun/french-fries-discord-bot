@@ -52,7 +52,7 @@ class HowdyExecutor extends Executor {
 
         messageList.forEach((message: string) =>
             resultTarget.push(
-                message.replace(/%%username%%/g, username)
+                message.replace(/%%username%%/g, sender.username)
             )
         );
 
