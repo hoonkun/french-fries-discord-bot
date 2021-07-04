@@ -21,6 +21,8 @@ abstract class Executor {
     abstract DescriptionAsHelp: string;
     abstract DescriptionAsArg: string;
 
+    abstract ChildExecutors: { [key: string]: Executor };
+
     abstract Args: { [key: string]: string };
     abstract ArgAliases: { [key: string]: string[] };
     abstract ArgAliasSuffixes: { [key: string]: string[] };
