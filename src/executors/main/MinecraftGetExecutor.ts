@@ -58,9 +58,9 @@ class MinecraftGetExecutor extends Executor {
         ["... ... (반응이 없다)"]
     ];
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
 
-        let args = command.slice(1, command.length);
+        statistic.push(this.Name);
 
         if (args.length === 0)
             return this.generateHelp();
@@ -91,6 +91,7 @@ class MinecraftGetExecutor extends Executor {
         switch (arg) {
             case this.Args.BLOCK: case this.Args.ITEM:
                 if (processResult != null && processResult.type == "material") {
+                    statistic.push(argData.argument);
                     return {
                         type: "embed",
                         data: {
@@ -98,13 +99,16 @@ class MinecraftGetExecutor extends Executor {
                             title: processResult.ko,
                             description: `${processResult.en}\n위와 같은 ${arg == this.Args.BLOCK ? "블럭" : "아이템"}이 나왔어!`,
                             thumbnail: processResult.key
-                        }
+                        },
+                        statistic: statistic
                     };
                 } else {
-                    return {type: "strings", data: ["This cannot be happen, maybe..."]};
+                    statistic.push(this.statisticErrorLabel);
+                    return {type: "strings", data: ["This cannot be happen, maybe..."], statistic: statistic};
                 }
             case this.Args.DEATH_MESSAGE:
                 if (processResult != null && processResult.type == "death_message") {
+                    statistic.push(this.Args.DEATH_MESSAGE);
                     return {
                         type: "strings",
                         data: [
@@ -117,10 +121,12 @@ class MinecraftGetExecutor extends Executor {
                                         "%%death-message%%",
                                         `\n> **${processResult.ko.replace(/%%name%%/g, username)}**\n> ${processResult.en.replace(/%%name%%/g, username)}\n`
                                     )
-                        ]
+                        ],
+                        statistic: statistic
                     };
                 } else {
-                    return {type: "strings", data: ["This cannot be happen, maybe...?"]};
+                    statistic.push(this.statisticErrorLabel);
+                    return {type: "strings", data: ["This cannot be happen, maybe...?"], statistic: statistic};
                 }
             case null:
                 let result = [this.getWrongOperationMessage(command[0])];
@@ -129,9 +135,12 @@ class MinecraftGetExecutor extends Executor {
 
                 this.WrongOperationCount++;
 
-                return {type: "strings", data: result};
+                statistic.push(this.statisticUnknownLabel);
+
+                return {type: "strings", data: result, statistic: statistic};
             default:
-                return {type: "strings", data: [ "This can not be happened, haha." ]}
+                statistic.push(this.statisticErrorLabel);
+                return {type: "strings", data: [ "This can not be happened, haha." ], statistic: statistic};
         }
 
     }
