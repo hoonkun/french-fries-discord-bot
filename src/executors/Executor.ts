@@ -2,8 +2,15 @@ import configurations from "../../configurations.json";
 
 import {ResponseData} from "../types";
 
-import {map, random} from "../utilities/ArrayUtils";
-import {entries} from "../utilities/ObjectUtils";
+import {random} from "../utilities/ArrayUtils";
+import {access, entries} from "../utilities/ObjectUtils";
+import {User} from "discord.js";
+
+interface ArgumentData {
+    arguments: string[],
+    argumentKey?: string,
+    argument?: string
+}
 
 abstract class Executor {
 
@@ -23,7 +30,29 @@ abstract class Executor {
 
     WrongOperationCount = 0;
 
-    abstract ChildExecutors: { [key: string]: Executor };
+    statisticHelpLabel = "(도움말)";
+    statisticUnknownLabel = "(알 수 없는 명령)";
+    statisticErrorLabel = "(에러가 발생한 명령)";
+
+    abstract exec(command: string[], statistic: string[], sender: User): ResponseData;
+
+    generateArgumentData(command: string[]): ArgumentData {
+        let args = command.slice(1, command.length);
+
+        if (args.length == 0)
+            return {arguments: args};
+
+        let argKey = this.getArgument(args[0].toLowerCase());
+        let arg = argKey ? access(this.Args, argKey) : null;
+
+        if (arg != null) this.WrongOperationCount = 0;
+
+        const result: ArgumentData = {arguments: args};
+        if (arg) result["argument"] = arg;
+        if (argKey) result["argumentKey"] = argKey;
+
+        return result;
+    }
 
     abstract exec(command: string[], username: string): ResponseData;
 

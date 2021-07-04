@@ -39,15 +39,12 @@ class MinecraftExecutor extends Executor {
 
         statistic.push(this.Name);
 
-        if (args.length === 0)
-            return this.generateHelp();
+        let argData = this.generateArgumentData(command);
 
-        let argKey = this.getArgument(args[0].toLowerCase());
-        let arg = argKey ? access(this.Args, argKey) : null;
+        if (argData.arguments.length == 0)
+            return this.generateHelp(command[0], statistic);
 
-        if (arg != null) this.WrongOperationCount = 0;
-
-        switch (arg) {
+        switch (argData.argument) {
             case this.Args.TITLE:
                 statistic.push(this.Args.TITLE);
                 return {
@@ -65,10 +62,12 @@ class MinecraftExecutor extends Executor {
                 statistic.push(this.statisticUnknownLabel);
                 return {type: "strings", data: result, statistic: statistic};
             default:
-                if (argKey)
-                    return access<Executor>(this.ChildExecutors, argKey).exec(args, username);
-                else
-                    return {type: "strings", data: ["뭔가 많이 잘못되었어... 개발한 놈 누구냐..."]};
+                if (argData.argumentKey)
+                    return access<Executor>(this.ChildExecutors, argData.argumentKey).exec(argData.arguments, statistic, sender);
+                else {
+                    statistic.push(this.statisticErrorLabel);
+                    return {type: "strings", data: ["뭔가 많이 잘못되었어... 개발한 놈 누구냐..."], statistic: statistic};
+                }
         }
 
     }

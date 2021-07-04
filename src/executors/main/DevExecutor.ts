@@ -56,15 +56,12 @@ class DevExecutor extends Executor {
 
         statistic.push(this.Name);
 
-        if (args.length === 0)
-            return this.generateHelp();
+        let argData = this.generateArgumentData(command);
 
-        let argKey = this.getArgument(args[0].toLowerCase());
-        let arg = argKey ? access(this.Args, argKey) : null;
+        if (argData.arguments.length == 0)
+            return this.generateHelp(command[0], statistic);
 
-        if (arg != null) this.WrongOperationCount = 0;
-
-        switch (arg) {
+        switch (argData.argument) {
             case this.Args.REPO_NAME:
                 statistic.push(this.Args.REPO_NAME);
                 return {
