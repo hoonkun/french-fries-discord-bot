@@ -112,11 +112,11 @@ class MinecraftGetExecutor extends Executor {
                             processResult.state === "NO_TRANSLATION" ?
                                 `뭐지... 번역이 없대. 원문은 아래와 같다네. \n> ${processResult.en.replace(/%%name%%/g, sender.username)}`
                                 :
-                                `**${username}**` +
+                                `**${sender.username}**` +
                                 random(deathMessageTemplates)
                                     .replace(
                                         "%%death-message%%",
-                                        `\n> **${processResult.ko.replace(/%%name%%/g, username)}**\n> ${processResult.en.replace(/%%name%%/g, username)}\n`
+                                        `\n> **${processResult.ko.replace(/%%name%%/g, sender.username)}**\n> ${processResult.en.replace(/%%name%%/g, sender.username)}\n`
                                     )
                         ],
                         statistic: statistic
