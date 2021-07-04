@@ -29,7 +29,10 @@ client.on("guildCreate", (guild) => {
 });
 
 client.on("message", (message) => {
-    if (!hasValidPrefix(message.content)) return;
+    let prefixCheck = hasValidPrefix(message.content);
+    let prefix = prefixCheck[0]?.value;
+
+    if (!prefixCheck[1] || !prefix) return;
 
     let commands = message.content.substring(getPrefixLength(message.content), message.content.length)
         .replace(/\[.+]/gs, "")
