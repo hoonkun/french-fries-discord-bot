@@ -56,17 +56,19 @@ abstract class Executor {
         return result;
     }
 
-    abstract exec(command: string[], username: string): ResponseData;
+    generateHelp(arg: string, statistic: string[]): ResponseData {
 
-    generateHelp(): ResponseData {
-        let aliases = map(this.Aliases, (alias) => `**${alias}**`).join(" | ");
-        let argumentHelp = map(
-            entries(this.Args),
-            (argEntry) => {
-                let aliases = map(this.ArgAliases[argEntry.key], (alias) => `**${alias}**`).join(" | ");
-                return `> ${configurations.PREFIXES[0].value} ... [ **${argEntry.value}**${aliases.length > 0 ? " | " : ""}${aliases} ]: ${this.ArgDescriptions[argEntry.key]}`;
-            }
-        ).join("\n");
+        let available = this.Aliases.filter((alias) => alias != arg).map((alias) => `**${alias}**`);
+        if (arg != this.Name)
+            available.unshift(`**${this.Name}**`);
+
+        let argumentHelp =
+            entries(this.Args).map(
+                (argEntry) => {
+                    let aliases = this.ArgAliases[argEntry.key].map((alias) => `**${alias}**`).join(" | ");
+                    return `> ${configurations.PREFIXES[0].value} ... [ **${argEntry.value}**${aliases.length > 0 ? " | " : ""}${aliases} ]: ${this.ArgDescriptions[argEntry.key]}`;
+                }
+            ).join("\n");
 
         statistic.push(this.statisticHelpLabel);
 
@@ -74,7 +76,7 @@ abstract class Executor {
             type: "strings",
             data: [
                 `${this.DescriptionAsHelp}`,
-                `이 커맨드는 [ ${aliases} ] 중 하나를 입력해도 실행할 수 있어!!`,
+                `이 커맨드는 [ ${available.join(" | ")} ] 중 하나를 입력해도 실행할 수 있어!!`,
                 `\n이 뒤에는 다음을 입력할 수 있어: \n${argumentHelp}`
             ],
             statistic: statistic
