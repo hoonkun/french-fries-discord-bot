@@ -4,7 +4,7 @@ interface Entry<T> {
 }
 
 export function entries<T>(target: {[k: string]: T}): Entry<T>[] {
-    return map(Object.entries(target), (value) => {return {key: value[0], value: value[1]}});
+    return Object.entries(target).map((value) => {return {key: value[0], value: value[1]}});
 }
 
 export function values(target: object): any[] {
