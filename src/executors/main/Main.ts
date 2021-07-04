@@ -193,6 +193,8 @@ class Main extends Executor {
 
                 this.WrongOperationCount++;
 
+                statistic.push(this.statisticUnknownLabel);
+
                 return {type: "strings", data: result, statistic: statistic};
             default:
                 if (argKey)
