@@ -3,6 +3,35 @@ import File from "fs";
 
 import {log} from "../utilities/Logger";
 
+type EmbedType = "block" | "item";
+
+interface EmbedData {
+    type: EmbedType,
+    title: string,
+    description: string,
+    thumbnail: string,
+    extras?: object
+}
+
+interface StringResponse {
+    type: "strings",
+    data: string[],
+    statistic: string[]
+}
+
+interface EmbedResponse {
+    type: "embed",
+    data: EmbedData,
+    statistic: string[]
+}
+
+interface StatisticResponse {
+    type: "statistic",
+    data: MessageEmbed
+}
+
+export type ResponseData = StringResponse | EmbedResponse | StatisticResponse;
+
 class FriesResponse {
 
     message: Message | null = null;
@@ -10,6 +39,13 @@ class FriesResponse {
 
     constructor(message: Message) {
         this.message = message;
+    }
+
+    customEmbed(embedTarget: MessageEmbed) {
+        if (!FriesResponse.isMessageValid(this.message, "parent message"))
+            return;
+
+        this.message!!.channel?.send(embedTarget).then();
     }
 
     embed(embedTarget: EmbedData) {
