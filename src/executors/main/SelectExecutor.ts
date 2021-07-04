@@ -1,8 +1,9 @@
-import {ResponseData} from "../../types";
-
 import Executor from "../Executor";
 
-import {map, random} from "../../utilities/ArrayUtils";
+import {ResponseData} from "../../response/FriesResponse";
+
+import {random} from "../../utilities/ArrayUtils";
+import {User} from "discord.js";
 
 const printTemplate = [
     "나는 '%%select-result%%'를 고르겠어.",
@@ -30,26 +31,37 @@ class SelectExecutor extends Executor {
 
     WrongMessages = [];
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
 
         let args = command.slice(1, command.length);
 
-        if (args.length === 0)
+        statistic.push(this.Name);
+
+        if (args.length === 0) {
+            let available = this.Aliases.filter((alias) => alias != command[0]).map((alias) => `**${alias}**`);
+            if (command[0] != this.Name)
+                available.unshift(`**${this.Name}**`);
+
+            statistic.push(this.statisticHelpLabel);
+
             return {
                 type: "strings",
                 data: [
                     `${this.DescriptionAsHelp}`,
-                    `이 커맨드는 [ ${map(this.Aliases, (alias) => `**${alias}**`)} ] 를 입력해도 실행할 수 있어!`,
+                    `이 커맨드는 [ ${available.join(" | ")} ] 를 입력해도 실행할 수 있어!`,
 
                     "이 뒤에는 선택하고 싶은 여러 항목들을 띄어쓰기로 구분해서 입력하면 돼. 그러면 봇이 그 중 하나를 골라줄거야!"
-                ]
+                ],
+                statistic: statistic
             };
+        }
 
         let selectArgs = args.slice(1, args.length);
 
         return {
             type: "strings",
-            data: [random(printTemplate).replace("%%select-result%%", `**${random(selectArgs)}**`)]
+            data: [random(printTemplate).replace("%%select-result%%", `**${random(selectArgs)}**`)],
+            statistic: statistic
         };
 
     }
