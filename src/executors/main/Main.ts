@@ -1,7 +1,5 @@
 import configurations from "../../../configurations.json";
 
-import {ResponseData} from "../../types";
-
 import Executor from "../Executor";
 
 import MinecraftExecutor from "./MinecraftExecutor";

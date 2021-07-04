@@ -1,5 +1,3 @@
-import {ResponseData} from "../../types";
-
 import Executor from "../Executor";
 
 import {map, random} from "../../utilities/ArrayUtils";

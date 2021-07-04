@@ -1,5 +1,3 @@
-import {MinecraftResult, ResponseData} from "../../types";
-
 import Executor from "../Executor";
 
 import {spawnSync} from "child_process";

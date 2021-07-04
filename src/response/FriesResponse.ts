@@ -1,7 +1,6 @@
 import {Message, MessageAttachment, MessageEmbed} from "discord.js";
 import File from "fs";
 
-import {EmbedData, ResponseData} from "../types";
 import {log} from "../utilities/Logger";
 
 class FriesResponse {

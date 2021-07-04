@@ -1,5 +1,3 @@
-import {ResponseData} from "../../types";
-
 import File from "fs";
 
 import Executor from "../Executor";
