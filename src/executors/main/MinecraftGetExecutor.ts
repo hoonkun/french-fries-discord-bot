@@ -62,16 +62,13 @@ class MinecraftGetExecutor extends Executor {
 
         statistic.push(this.Name);
 
-        if (args.length === 0)
-            return this.generateHelp();
+        let argData = this.generateArgumentData(command);
 
-        let argKey = this.getArgument(args[0].toLowerCase());
-        let arg = argKey ? access(this.Args, argKey) : null;
-
-        if (argKey != null) this.WrongOperationCount = 0;
+        if (argData.arguments.length == 0)
+            return this.generateHelp(command[0], statistic);
 
         let spawnArgs = "";
-        switch(arg) {
+        switch(argData.argument) {
             case this.Args.BLOCK: spawnArgs = "block"; break;
             case this.Args.ITEM: spawnArgs = "item"; break;
             case this.Args.DEATH_MESSAGE: spawnArgs = "died"; break;
@@ -88,16 +85,16 @@ class MinecraftGetExecutor extends Executor {
         let processResult: MinecraftResult | null = null;
         if (process.stdout) processResult = JSON.parse(process.stdout);
 
-        switch (arg) {
+        switch (argData.argument) {
             case this.Args.BLOCK: case this.Args.ITEM:
                 if (processResult != null && processResult.type == "material") {
                     statistic.push(argData.argument);
                     return {
                         type: "embed",
                         data: {
-                            type: arg == this.Args.BLOCK ? "block" : "item",
+                            type: argData.argument == this.Args.BLOCK ? "block" : "item",
                             title: processResult.ko,
-                            description: `${processResult.en}\n위와 같은 ${arg == this.Args.BLOCK ? "블럭" : "아이템"}이 나왔어!`,
+                            description: `${processResult.en}\n위와 같은 ${argData.argument == this.Args.BLOCK ? "블럭" : "아이템"}이 나왔어!`,
                             thumbnail: processResult.key
                         },
                         statistic: statistic
@@ -113,7 +110,7 @@ class MinecraftGetExecutor extends Executor {
                         type: "strings",
                         data: [
                             processResult.state === "NO_TRANSLATION" ?
-                                `뭐지... 번역이 없대. 원문은 아래와 같다네. \n> ${processResult.en.replace(/%%name%%/g, username)}`
+                                `뭐지... 번역이 없대. 원문은 아래와 같다네. \n> ${processResult.en.replace(/%%name%%/g, sender.username)}`
                                 :
                                 `**${username}**` +
                                 random(deathMessageTemplates)
