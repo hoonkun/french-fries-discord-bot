@@ -1,7 +1,10 @@
 import Executor from "../Executor";
 
-import {map, random} from "../../utilities/ArrayUtils";
-import {access} from "../../utilities/ObjectUtils";
+import {ResponseData} from "../../response/FriesResponse";
+
+import {random} from "../../utilities/ArrayUtils";
+import {values} from "../../utilities/ObjectUtils";
+import {User} from "discord.js";
 
 const names = [
     [
@@ -49,9 +52,9 @@ class DevExecutor extends Executor {
         ["... ... (반응이 없다)"]
     ];
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
 
-        let args = command.slice(1, command.length);
+        statistic.push(this.Name);
 
         if (args.length === 0)
             return this.generateHelp();
@@ -63,9 +66,11 @@ class DevExecutor extends Executor {
 
         switch (arg) {
             case this.Args.REPO_NAME:
+                statistic.push(this.Args.REPO_NAME);
                 return {
                     type: "strings",
-                    data: [random(printTemplates).replace("%%content%%", `${random(names[0])}-${random(names[1])}`)]
+                    data: [random(printTemplates).replace("%%content%%", `${random(names[0])}-${random(names[1])}`)],
+                    statistic: statistic
                 };
             case null:
                 let result = [this.getWrongOperationMessage(command[0])];
@@ -74,9 +79,12 @@ class DevExecutor extends Executor {
 
                 this.WrongOperationCount++;
 
-                return {type: "strings", data: result};
+                statistic.push(this.statisticUnknownLabel);
+
+                return {type: "strings", data: result, statistic: statistic};
             default:
-                return {type: "strings", data: [ "This can not be happened, haha....? Really?" ]}
+                statistic.push(this.statisticErrorLabel);
+                return {type: "strings", data: [ "This can not be happened, haha....? Really?" ], statistic: statistic};
         }
 
     }

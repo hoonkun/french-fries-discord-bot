@@ -31,7 +31,8 @@ class Main extends Executor {
         SELECT: this.ChildExecutors.SELECT.Name,
         HOWDY: this.ChildExecutors.HOWDY.Name,
         HELP: "도움말",
-        INFORMATION: "정보"
+        INFORMATION: "정보",
+        STATISTICS: "통계"  // this arg must be last.
     };
 
     ArgAliases = {
@@ -40,7 +41,8 @@ class Main extends Executor {
         SELECT: this.ChildExecutors.SELECT.Aliases,
         HOWDY: this.ChildExecutors.HOWDY.Aliases,
         HELP: ["도와줘", "모르겠어"],
-        INFORMATION: ["뭐야", "누구야"]
+        INFORMATION: ["뭐야", "누구야"],
+        STATISTICS: ["통계보여줘"]
     };
 
     ArgAliasSuffixes = {
@@ -49,7 +51,8 @@ class Main extends Executor {
         SELECT: this.ChildExecutors.SELECT.Suffixes,
         HOWDY: this.ChildExecutors.HOWDY.Suffixes,
         HELP: [ "!!" ],
-        INFORMATION: [ "?" ]
+        INFORMATION: [ "?" ],
+        STATISTICS: []
     };
 
     ArgDescriptions = {};
@@ -74,7 +77,7 @@ class Main extends Executor {
         ["다른 할 일이 있지 않아?"]
     ]
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
 
         if (command.length === 0) {
             let result = [this.getNoOperationDefinedMessage()];
@@ -83,7 +86,12 @@ class Main extends Executor {
 
             this.NoOperationDefinedCount++;
 
-            return {type: "strings", data: result};
+            statistic.push("(빈 명령)")
+
+            return {type: "strings", data: result, statistic: statistic};
+        } else if (command.length === 0 && isFirstOperation) {
+            FriesDataUtils.set("isFirstOperation", sender.tag, false);
+            command.push("도움말");
         }
 
         this.NoOperationDefinedCount = 0;
@@ -95,16 +103,27 @@ class Main extends Executor {
 
         switch (arg) {
             case this.Args.HELP:
-                let prefixes = filter(configurations.PREFIXES, (prefix) => prefix.type === "normal");
+                statistic.push(this.Args.HELP);
+
+                let prefixes = configurations.PREFIXES.filter((prefix) => prefix.type === "normal")
+                    .map((prefix) => `**${prefix.value}**`)
+                    .join(" | ");
+                let args = values(this.Args).filter((_: string, index: number, array: string[]) => index < array.length - 1).map((arg) => `**${arg}**`).join(" | ");
+
                 return {
                     type: "strings",
                     data: [
-                        `[ ${map(prefixes, (prefix) => `**${prefix.value}**`).join(" | ")} ] 중 하나를 입력하고 한 칸 띄운 뒤에, 다음과 같은 명령을 입력할 수 있어:`,
-                        `[ ${map(values(this.Args), (arg) => `**${arg}**`).join(" | ")} ]`,
-                        "\n입력해보면 다른 별칭도 알려줄거야!!" + (command[0].toLowerCase() === this.Args.HELP ? `\n*참고로 이 명령은 [ ${map(this.ArgAliases.HELP, (alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!` : "")
-                    ]
+                        `명령 접두사인 [ ${prefixes} ] 중 하나를 입력하고 한 칸 띄운 뒤에, 다음과 같은 명령을 입력할 수 있어:`,
+                        `[ ${args} ]`, `\n봇을 사용한 통계를 보고싶다면 '**!! 통계보여줘**' 명령을 사용하면 돼.`,
+                        isFirstOperation ?
+                            `\n다음에 이 문구를 다시 보고싶다면 명령 접두사 뒤에 '**${this.Args.HELP}**'을 입력해줘!!` :
+                            `\n${(command[0].toLowerCase() === this.Args.HELP ? `\n*참고로 이 명령은 [ ${this.ArgAliases.HELP.map((alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!` : ``)}`
+                    ],
+                    statistic: statistic
                 };
             case this.Args.INFORMATION:
+                statistic.push(this.Args.INFORMATION);
+
                 let target = ["HoonKun(@hoon_kiwicraft)가 심심해서 만든 봇이야!\n별로 재미있는건 없지만 암튼 그렇대."];
 
                 if (command.length == 1 || command.length > 1 && command[1].toLowerCase() != "tmi")
@@ -121,8 +140,39 @@ class Main extends Executor {
                     target.push(`\n*참고로 이 명령은 [ ${map(this.ArgAliases.INFORMATION, (alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!`);
                 return {
                     type: "strings",
-                    data: target
+                    data: target,
+                    statistic: statistic
                 };
+            case this.Args.STATISTICS:
+                if (FriesDataUtils.get().statistics[sender.tag]) {
+                    let count = FriesDataUtils.get().operationCounts[sender.tag];
+                    let commands = entries(FriesDataUtils.get().statistics[sender.tag].commands)
+                        .sort((a, b) => b.value - a.value)
+                        .map((entry) => `${entry.key}\t\t→\t\t${entry.value}회`)
+                        .join("\n");
+
+                    let prefixes = entries(FriesDataUtils.get().statistics[sender.tag].prefixes)
+                        .sort((a, b) => b.value - a.value)
+                        .map((entry) => `${entry.key}\t\t→\t\t${entry.value}회`)
+                        .join("\n");
+
+                    let resultEmbed = new MessageEmbed()
+                        .setColor("#0070b8")
+                        .setThumbnail(sender.displayAvatarURL())
+                        .setTitle(`${sender.username}의 통계야!!`)
+                        .setDescription(`총 ${count ? count : 0}번의 명령을 사용했어:\n\n${commands}\n\n명령 접두사는 다음과 같이 썼어:\n\n${prefixes}`);
+
+                    return {
+                        type: "statistic",
+                        data: resultEmbed
+                    }
+                } else {
+                    return {
+                        type: "strings",
+                        data: [ "표시할 수 있는 통계가 없어!!" ],
+                        statistic: []
+                    }
+                }
             case null:
                 let result = [this.getWrongOperationMessage(command[0])];
                 if (this.WrongOperationCount == 0)
@@ -130,12 +180,14 @@ class Main extends Executor {
 
                 this.WrongOperationCount++;
 
-                return {type: "strings", data: result};
+                return {type: "strings", data: result, statistic: statistic};
             default:
                 if (argKey)
-                    return access<Executor>(this.ChildExecutors, argKey).exec(command, username);
-                else
-                    return {type: "strings", data: ["뭔가 많이 잘못되었어... 개발한 놈 누구냐..."]};
+                    return access<Executor>(this.ChildExecutors, argKey).exec(command, statistic, sender);
+                else {
+                    statistic.push(this.statisticErrorLabel);
+                    return {type: "strings", data: ["뭔가 많이 잘못되었어... 개발한 놈 누구냐..."], statistic: statistic};
+                }
         }
 
     }

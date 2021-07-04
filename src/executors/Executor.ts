@@ -37,13 +37,16 @@ abstract class Executor {
             }
         ).join("\n");
 
+        statistic.push(this.statisticHelpLabel);
+
         return {
             type: "strings",
             data: [
                 `${this.DescriptionAsHelp}`,
                 `이 커맨드는 [ ${aliases} ] 중 하나를 입력해도 실행할 수 있어!!`,
                 `\n이 뒤에는 다음을 입력할 수 있어: \n${argumentHelp}`
-            ]
+            ],
+            statistic: statistic
         };
     }
 

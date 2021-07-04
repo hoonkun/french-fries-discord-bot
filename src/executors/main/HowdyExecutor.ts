@@ -43,7 +43,7 @@ class HowdyExecutor extends Executor {
 
     WrongMessages = [];
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
         let messageList = random(messages);
         let resultTarget: string[] = [];
 
@@ -53,9 +53,12 @@ class HowdyExecutor extends Executor {
             )
         );
 
+        statistic.push(this.Name);
+
         return {
             type: "strings",
-            data: resultTarget
+            data: resultTarget,
+            statistic: statistic
         };
     }
 

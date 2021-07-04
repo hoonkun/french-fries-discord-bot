@@ -35,9 +35,9 @@ class MinecraftExecutor extends Executor {
         ["... ... (반응이 없다)"]
     ];
 
-    exec(command: string[], username: string): ResponseData {
+    exec(command: string[], statistic: string[], sender: User): ResponseData {
 
-        let args = command.slice(1, command.length);
+        statistic.push(this.Name);
 
         if (args.length === 0)
             return this.generateHelp();
@@ -49,9 +49,11 @@ class MinecraftExecutor extends Executor {
 
         switch (arg) {
             case this.Args.TITLE:
+                statistic.push(this.Args.TITLE);
                 return {
                     type: "strings",
-                    data: [random(titles)]
+                    data: [random(titles)],
+                    statistic: statistic
                 };
             case null:
                 let result = [this.getWrongOperationMessage(command[0])];
@@ -60,7 +62,8 @@ class MinecraftExecutor extends Executor {
 
                 this.WrongOperationCount++;
 
-                return {type: "strings", data: result};
+                statistic.push(this.statisticUnknownLabel);
+                return {type: "strings", data: result, statistic: statistic};
             default:
                 if (argKey)
                     return access<Executor>(this.ChildExecutors, argKey).exec(args, username);

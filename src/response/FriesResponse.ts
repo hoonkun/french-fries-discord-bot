@@ -63,6 +63,8 @@ class FriesResponse {
             this.strings(target.data, null);
         } else if (target.type == "embed") {
             this.embed(target.data);
+        } else if (target.type == "statistic") {
+            this.customEmbed(target.data);
         } else {
             log(`invalid response type!!`);
             log(`... but this is not possible, haha.`);
