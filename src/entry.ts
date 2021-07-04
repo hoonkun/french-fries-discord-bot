@@ -22,7 +22,7 @@ client.on("ready", () => {
 client.on("guildCreate", (guild) => {
     let channel = guild.channels.cache.find((channel) => channel.name == "general" || channel.name == "일반");
     try {
-        (channel as TextChannel).send("헤에... 감자튀김이야.\n'감튀야 도와줘' 혹은 '감자튀김 형 도와줘' 를 입력해봐!!").then();
+        (channel as TextChannel).send("헤에... 감자튀김이야.\n'감튀야' 혹은 '감자튀김 형' 를 입력해봐!!").then();
     } catch(e) {
         console.log(e);
     }
