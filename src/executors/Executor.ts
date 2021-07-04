@@ -33,8 +33,8 @@ abstract class Executor {
     WrongOperationCount = 0;
 
     statisticHelpLabel = "(도움말)";
-    statisticUnknownLabel = "(알 수 없는 명령)";
-    statisticErrorLabel = "(에러가 발생한 명령)";
+    statisticUnknownLabel = "(알 수 없음)";
+    statisticErrorLabel = "(에러)";
 
     abstract exec(command: string[], statistic: string[], sender: User): ResponseData;
 
