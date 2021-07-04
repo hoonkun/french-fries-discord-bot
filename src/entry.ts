@@ -16,10 +16,6 @@ client.on("ready", () => {
     console.log(`Bot is Ready!! [client.user.tag: ${client.user?.tag}]`);
 });
 
-client.on("messageReactionAdd", (reaction, user) => {
-
-});
-
 client.on("guildCreate", (guild) => {
     let channel = guild.channels.cache.find((channel) => channel.name == "general" || channel.name == "일반");
     try {
