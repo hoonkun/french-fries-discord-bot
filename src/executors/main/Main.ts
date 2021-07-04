@@ -84,7 +84,7 @@ class Main extends Executor {
         if (command.length === 0 && !isFirstOperation) {
             let result = [this.getNoOperationDefinedMessage()];
             if (this.NoOperationDefinedCount == 0)
-                result.push(`가능한 명령에는 다음과 같은 것들이 있어:\n[ ${map(values(this.Args), (arg) => `**${arg}**`).join(" | ")} ]`, `\n*별칭이라는 것도 있으니 일단 한 번 입력해보라구!!`);
+                result.push(`\n가능한 명령에는 다음과 같은 것들이 있어:\n[ ${args} ]\n봇을 사용한 통계를 보고싶다면 '**!! 통계보여줘**'명령을 사용하면 돼.`);
 
             this.NoOperationDefinedCount++;
 
