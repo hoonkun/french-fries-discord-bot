@@ -3,8 +3,27 @@ import {MinecraftResult, ResponseData} from "../../types";
 import Executor from "../Executor";
 
 import {spawnSync} from "child_process";
-import {map, random} from "../../utilities/ArrayUtils";
-import {access} from "../../utilities/ObjectUtils";
+import {random} from "../../utilities/ArrayUtils";
+import {values} from "../../utilities/ObjectUtils";
+
+import {ResponseData} from "../../response/FriesResponse";
+import {User} from "discord.js";
+
+type MinecraftResult = MinecraftResultMaterial | MinecraftResultDeathMessage;
+
+interface MinecraftResultMaterial {
+    type: "material",
+    ko: string,
+    en: string,
+    key: string
+}
+
+interface MinecraftResultDeathMessage {
+    type: "death_message",
+    state: "NO_TRANSLATION" | "OK",
+    ko: string,
+    en: string
+}
 
 const deathMessageTemplates = [
     "는 죽었어... %%death-message%% ...라는데.",
