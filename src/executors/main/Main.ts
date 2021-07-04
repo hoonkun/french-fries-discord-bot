@@ -93,11 +93,11 @@ class Main extends Executor {
                 .join(" | ");
 
             if (this.NoOperationDefinedCount == 0)
-                result.push(`\n가능한 명령에는 다음과 같은 것들이 있어:\n[ ${args} ]\n봇을 사용한 통계를 보고싶다면 '**!! 통계보여줘**'명령을 사용하면 돼.`);
+                result.push(`\n가능한 명령에는 다음과 같은 것들이 있어:\n[ ${args} ]`);
 
             this.NoOperationDefinedCount++;
 
-            statistic.push("(빈 명령)")
+            statistic.push("(빈 명령)");
 
             return {type: "strings", data: result, statistic: statistic};
         } else if (command.length === 0 && isFirstOperation) {
@@ -127,7 +127,7 @@ class Main extends Executor {
                         `명령 접두사인 [ ${prefixes} ] 중 하나를 입력하고 한 칸 띄운 뒤에, 다음과 같은 명령을 입력할 수 있어:`,
                         `[ ${args} ]`, `\n봇을 사용한 통계를 보고싶다면 '**!! 통계보여줘**' 명령을 사용하면 돼.`,
                         isFirstOperation ?
-                            `\n다음에 이 문구를 다시 보고싶다면 명령 접두사 뒤에 '**${this.Args.HELP}**'을 입력해줘!!` :
+                            `\n다음에 이 문구를 다시 보고싶다면 '**${this.Args.HELP}**'명령을 사용해줘!!` :
                             `\n${(command[0].toLowerCase() === this.Args.HELP ? `\n*참고로 이 명령은 [ ${this.ArgAliases.HELP.map((alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!` : ``)}`
                     ],
                     statistic: statistic
@@ -138,12 +138,10 @@ class Main extends Executor {
                 let target = ["HoonKun(@hoon_kiwicraft)가 심심해서 만든 봇이야!\n별로 재미있는건 없지만 암튼 그렇대."];
 
                 if (command.length == 1 || command.length > 1 && command[1].toLowerCase() != "tmi")
-                    target.push(`좀 더 자세한 정보를 원하면 다음 커맨드를 입력해:\n> !! 정보 TMI`);
+                    target.push(`\n좀 더 자세한 정보를 원하면 다음 커맨드를 입력해:\n> **!!** [ **정보** | **뭐야** | **누구야** ] **TMI**`);
                 else if (command.length > 1 && command[1].toLowerCase() == "tmi") {
                     target.push(
-                        "이 디코봇은 typescript 라는 언어를 사용했고, nodejs 라는 서버 구축 플랫폼과 Discord.js 라는 라이브러리를 사용해 만들어졌어.",
-                        "총 개발 기간은 3일 정도였고, javascript로 작성했던걸 typescript로 바꾸는 과정에 1일이 추가로 쓰였어.",
-                        "이것 저것 요소를 추가하다보니 좀 더럽고 어렵게 짜였는데, 훨씬 간단하게도 짤 수 있어.",
+                        "\n이 디코봇은 typescript 라는 언어를 사용했고, nodejs 라는 서버 구축 플랫폼과 Discord.js 라는 라이브러리를 사용해 만들어졌어.",
                         "\n소스코드를 보고싶으면 이쪽으로 가봐:\n> https://github.com/gohoon-k/french-fries-discord-bot",
                         "말했듯 별로 재미난 건 없지만 추가되었으면 하는게 있다면 말해주면 추가해볼게!!"
                     );
