@@ -5,12 +5,15 @@ import configurations from "../configurations.json";
 
 import FriesResponse from "./response/FriesResponse";
 import Main from "./executors/main/Main";
+import FriesDataUtils from "./utilities/FriesDataUtils";
 
 import {getPrefixLength, hasValidPrefix} from "./utilities/PrefixUtils";
 
 const client = new Discord.Client();
 
 const mainExecutor = new Main();
+
+FriesDataUtils.init();
 
 client.on("ready", () => {
     console.log(`Bot is Ready!! [client.user.tag: ${client.user?.tag}]`);
@@ -37,7 +40,15 @@ client.on("message", (message) => {
         commands.splice(commands.indexOf(''), 1);
 
     try {
-        new FriesResponse(message).do(mainExecutor.exec(commands, message.author.username));
+        let responseData = mainExecutor.exec(commands, [configurations.PREFIXES[0].value], message.author)
+        new FriesResponse(message).do(responseData);
+
+        if ((responseData.type == "embed" || responseData.type == "strings") && responseData.statistic.length > 0) {
+            let operationCounts = FriesDataUtils.get().operationCounts[message.author.tag];
+            operationCounts = operationCounts ? operationCounts : 0;
+            FriesDataUtils.set("operationCounts", message.author.tag, operationCounts + 1);
+            FriesDataUtils.applyStatistics(message.author.tag, responseData.statistic.join(" "), prefix);
+        }
     } catch (e) {
         console.log(e);
         message.channel.send("\nERROR!! ERROR!! 삐리리↘.").then();
