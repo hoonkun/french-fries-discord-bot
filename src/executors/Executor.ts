@@ -62,7 +62,7 @@ abstract class Executor {
                 if (argEntry.value === word || `${argEntry.value}${argAliasSuffix}` === word) result = argEntry.key;
 
                 let originalArgAliases: string[] = JSON.parse(JSON.stringify(argAliasEntry.value));
-                let argsWithSuffix: string[] = map(argAliasEntry.value, (arg) => `${arg}${argAliasSuffix}`);
+                let argsWithSuffix: string[] = argAliasEntry.value.map((arg) => `${arg}${argAliasSuffix}`);
 
                 if (originalArgAliases.includes(word) || argsWithSuffix.includes(word)) result = argEntry.key;
             });

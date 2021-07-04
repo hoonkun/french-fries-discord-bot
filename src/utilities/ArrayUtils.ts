@@ -2,22 +2,6 @@ export function random<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-export function map<T>(array: T[], action: (value: T) => any): any[] {
-    let result: any[] = [];
-    array.forEach((value) => {
-        result.push(action(value));
-    });
-    return result;
-}
-
-export function filter<T>(array: T[], criteria: (value: T) => boolean): T[] {
-    let result: any[] = [];
-    array.forEach((value) => {
-        if (criteria(value)) result.push(value);
-    });
-    return result;
-}
-
 export function permutation(...arrays: any[][]): any[][] {
     let depth = 0;
 

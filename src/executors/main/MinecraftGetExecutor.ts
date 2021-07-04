@@ -128,7 +128,7 @@ class MinecraftGetExecutor extends Executor {
             case null:
                 let result = [this.getWrongOperationMessage(command[0])];
                 if (this.WrongOperationCount == 0)
-                    result.push(`[ ${map(Object.values(this.Args), (arg) => `**${arg}**`).join(" | ")} ]중 하나, 혹은 그 별칭을 입력해줘!!`);
+                    result.push(`[ ${values(this.Args).map((arg) => `**${arg}**`).join(" | ")} ]중 하나, 혹은 그 별칭을 입력해줘!!`);
 
                 this.WrongOperationCount++;
 
