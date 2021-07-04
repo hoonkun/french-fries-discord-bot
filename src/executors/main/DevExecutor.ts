@@ -69,7 +69,7 @@ class DevExecutor extends Executor {
                     data: [random(printTemplates).replace("%%content%%", `${random(names[0])}-${random(names[1])}`)],
                     statistic: statistic
                 };
-            case null:
+            case null: case undefined:
                 let result = [this.getWrongOperationMessage(command[0])];
                 if (this.WrongOperationCount == 0)
                     result.push(`[ ${values(this.Args).map((arg) => `**${arg}**`).join(" | ")} ]중 하나, 혹은 그 별칭을 입력해줘!!`);
