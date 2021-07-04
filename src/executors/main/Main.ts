@@ -79,7 +79,9 @@ class Main extends Executor {
 
     exec(command: string[], statistic: string[], sender: User): ResponseData {
 
-        if (command.length === 0) {
+        const isFirstOperation = FriesDataUtils.get().isFirstOperation.hasOwnProperty(sender.tag) ? FriesDataUtils.get().isFirstOperation[sender.tag] : true;
+
+        if (command.length === 0 && !isFirstOperation) {
             let result = [this.getNoOperationDefinedMessage()];
             if (this.NoOperationDefinedCount == 0)
                 result.push(`가능한 명령에는 다음과 같은 것들이 있어:\n[ ${map(values(this.Args), (arg) => `**${arg}**`).join(" | ")} ]`, `\n*별칭이라는 것도 있으니 일단 한 번 입력해보라구!!`);
