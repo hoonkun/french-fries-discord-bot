@@ -137,7 +137,7 @@ class Main extends Executor {
                 }
 
                 if (command[0].toLowerCase() === this.Args.INFORMATION)
-                    target.push(`\n*참고로 이 명령은 [ ${map(this.ArgAliases.INFORMATION, (alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!`);
+                    target.push(`\n*참고로 이 명령은 [ ${this.ArgAliases.INFORMATION.map((alias) => `**${alias}**`).join(" | ")} ]이라는 별칭으로도 실행할 수 있어!`);
                 return {
                     type: "strings",
                     data: target,
