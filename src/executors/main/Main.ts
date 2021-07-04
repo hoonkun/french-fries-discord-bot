@@ -7,8 +7,12 @@ import DevExecutor from "./DevExecutor";
 import SelectExecutor from "./SelectExecutor";
 import HowdyExecutor from "./HowdyExecutor";
 
-import {filter, map, random} from "../../utilities/ArrayUtils";
-import {access, values} from "../../utilities/ObjectUtils";
+import {ResponseData} from "../../response/FriesResponse";
+
+import {random} from "../../utilities/ArrayUtils";
+import {access, entries, values} from "../../utilities/ObjectUtils";
+import FriesDataUtils from "../../utilities/FriesDataUtils";
+import {MessageEmbed, User} from "discord.js";
 
 class Main extends Executor {
 

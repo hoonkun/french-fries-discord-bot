@@ -3,8 +3,11 @@ import File from "fs";
 import Executor from "../Executor";
 import MinecraftGetExecutor from "./MinecraftGetExecutor";
 
-import {map, random} from "../../utilities/ArrayUtils";
-import {access} from "../../utilities/ObjectUtils";
+import {ResponseData} from "../../response/FriesResponse";
+
+import {random} from "../../utilities/ArrayUtils";
+import {access, values} from "../../utilities/ObjectUtils";
+import {User} from "discord.js";
 
 const titles = File.readFileSync("resources/minecraft/titles.txt", {encoding: "utf-8"}).toString().split("\n");
 

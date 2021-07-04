@@ -1,6 +1,6 @@
 import configurations from "../../configurations.json";
 
-import {ResponseData} from "../types";
+import {ResponseData} from "../response/FriesResponse";
 
 import {random} from "../utilities/ArrayUtils";
 import {access, entries} from "../utilities/ObjectUtils";

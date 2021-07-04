@@ -1,6 +1,9 @@
 import Executor from "../Executor";
 
+import {ResponseData} from "../../response/FriesResponse";
+
 import {random} from "../../utilities/ArrayUtils";
+import {User} from "discord.js";
 
 const messages = [
     ["**undefined**", "'.replace' is not a function."],
